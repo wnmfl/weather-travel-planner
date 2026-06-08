@@ -1,15 +1,105 @@
+# ============================================================
+# Weather Travel Planner - 应用配置
+# ============================================================
+
 spring:
+  # 应用基本信息
   application:
     name: weather-travel-planner
+  
+  # 数据库配置
+  # 连接到本地MySQL数据库
   datasource:
-    url: jdbc:mysql://localhost:3306/travel_planner?useSSL=false&serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/travel_planner?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
     username: root
     password: Hsq.0716
     driver-class-name: com.mysql.cj.jdbc.Driver
+  
+  # JPA/Hibernate配置
   jpa:
     hibernate:
-      ddl-auto: validate
+      # create: 每次启动都删除并重新创建表（开发用）
+      # create-drop: 创建表，关闭时删除
+      # update: 根据实体类更新表结构（推荐开发用）
+      # validate: 验证表结构是否与实体类一致（生产推荐）
+      # none: 不做任何操作
+      ddl-auto: update
+    
+    # 是否在日志中打印SQL语句
     show-sql: false
+    
+    # Hibernate属性配置
+    properties:
+      hibernate:
+        # 格式化输出的SQL
+        format_sql: true
+        # 使用MySQL8方言
+        dialect: org.hibernate.dialect.MySQL8Dialect
+  
+  # Redis缓存配置（可选）
+  # 用于缓存天气数据、景点信息等
+  redis:
+    host: localhost             # Redis服务器地址
+    port: 6379                  # Redis端口
+    #password:                   # Redis密码
+    timeout: 2000               # 连接超时时间（毫秒）
+    jedis:
+      pool:
+        max-active: 8           # 连接池最大连接数
+        max-idle: 8             # 连接池最大空闲连接数
+        min-idle: 0             # 连接池最小空闲连接数
 
+# 服务器配置
 server:
-  port: 8080
+  port: 8080                    # 后端服务器端口
+  servlet:
+    context-path: /             # 应用上下文路径
+
+# 日志配置
+logging:
+  level:
+    root: INFO                  # 根日志级别
+    com.travel: DEBUG           # 我们项目的日志级别设为DEBUG，便于开发调试
+  pattern:
+    # 日志输出格式
+    # %d{} 时间
+    # %msg 日志信息
+    # %n 换行
+    console: "%d{yyyy-MM-dd HH:mm:ss} - [%logger{0}] %msg%n"
+
+# ============================================================
+# 第三方API配置
+# ============================================================
+
+# 天气API配置（OpenWeatherMap）
+weather:
+  api:
+    openweathermap:
+      url: https://api.openweathermap.org/data/2.5
+      # API密钥从环境变量读取，如未设置则使用默认值
+      key: ${OPENWEATHER_API_KEY:your_api_key_here}
+      units: metric              # 使用摄氏度
+      lang: zh_cn                # 语言：中文
+
+# 地图API配置（高德地图）
+map:
+  api:
+    amap:
+      key: ${AMAP_API_KEY:your_api_key_here}
+      # 高德地图API密钥需要从环境变量获取
+
+# ============================================================
+# 使用方法：
+# ============================================================
+# 
+# 1. 本地开发：
+#    mvn spring-boot:run
+#
+# 2. 设置API密钥：
+#    export OPENWEATHER_API_KEY=你的密钥
+#    export AMAP_API_KEY=你的密钥
+#    然后启动应用
+#
+# 3. 生产部署：
+#    修改datasource.url, username, password
+#    设置环境变量获取敏感信息
