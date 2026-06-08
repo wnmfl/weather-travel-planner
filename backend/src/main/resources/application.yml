@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: weather-travel-planner
+  datasource:
+    url: jdbc:mysql://localhost:3306/travel_planner?useSSL=false&serverTimezone=UTC
+    username: root
+    password: Hsq.0716
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+
+server:
+  port: 8080

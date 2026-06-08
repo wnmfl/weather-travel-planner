@@ -1,0 +1,28 @@
+# Backend
+backend/target/
+backend/.classpath
+backend/.project
+backend/.settings/
+backend/*.jar
+backend/*.class
+backend/.idea/
+backend/*.iml
+backend/.gradle/
+backend/build/
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.cache/
+frontend/.env.local
+
+# IDE
+.vscode/
+.DS_Store
+*.swp
+*.swo
+*~
+
+# Environment
+.env
+.env.local
